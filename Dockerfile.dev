@@ -1,0 +1,31 @@
+FROM golang:1.23-alpine
+
+WORKDIR /app
+
+# Install build dependencies and air
+RUN apk add --no-cache git \
+    && go install github.com/air-verse/air@v1.61.0
+
+# Copy go mod files
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy the rest of the application
+COPY . .
+
+# Create necessary directories
+RUN mkdir -p /tmp
+
+# Set working directory to /app
+WORKDIR /app
+
+# Copy .env file if it exists (using .dockerignore to handle non-existence)
+COPY .env* ./
+
+# Expose the port the app runs on
+EXPOSE 8080
+
+# Command to run the application with Air
+CMD ["air", "-c", ".air.toml"]

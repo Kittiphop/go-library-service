@@ -1,0 +1,655 @@
+definitions:
+  entity.BookCreateRequest:
+    properties:
+      author:
+        type: string
+      price:
+        type: number
+      stock:
+        minimum: 1
+        type: integer
+      title:
+        type: string
+    required:
+    - author
+    - price
+    - stock
+    - title
+    type: object
+  entity.BookResponse:
+    properties:
+      author:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      price:
+        type: number
+      stock:
+        type: integer
+      title:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  entity.BookUpdateRequest:
+    properties:
+      author:
+        type: string
+      id:
+        type: integer
+      price:
+        type: number
+      stock:
+        minimum: 1
+        type: integer
+      title:
+        type: string
+    required:
+    - author
+    - id
+    - price
+    - stock
+    - title
+    type: object
+  entity.BorrowBookRequest:
+    properties:
+      bookId:
+        type: integer
+    required:
+    - bookId
+    type: object
+  entity.BorrowHistoryResponse:
+    properties:
+      bookId:
+        type: integer
+      borrowedAt:
+        type: string
+      id:
+        type: integer
+      returnedAt:
+        type: string
+      status:
+        type: string
+      userId:
+        type: integer
+    type: object
+  entity.LoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  entity.ResponseData:
+    properties:
+      data: {}
+    type: object
+  entity.ResponseError:
+    properties:
+      code:
+        type: integer
+      error:
+        type: string
+    type: object
+  entity.ReturnBookRequest:
+    properties:
+      bookId:
+        type: integer
+      historyId:
+        type: integer
+    required:
+    - bookId
+    - historyId
+    type: object
+  entity.UserCreateRequest:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - name
+    - password
+    - username
+    type: object
+  entity.UserLoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  entity.UserResponse:
+    properties:
+      createdAt:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  entity.UserUpdateRequest:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+info:
+  contact: {}
+paths:
+  /books:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of books with pagination and optional filters
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: size
+        type: integer
+      - description: Search query
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entity.BookResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: List all books
+      tags:
+      - books
+  /books/:id/borrow:
+    post:
+      consumes:
+      - application/json
+      description: Borrow a book by ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Borrow book
+        in: body
+        name: borrow
+        required: true
+        schema:
+          $ref: '#/definitions/entity.BorrowBookRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.ResponseData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Borrow a book
+      tags:
+      - books
+  /books/:id/return:
+    post:
+      consumes:
+      - application/json
+      description: Return a borrowed book by ID
+      parameters:
+      - description: Borrow ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Return book
+        in: body
+        name: return
+        required: true
+        schema:
+          $ref: '#/definitions/entity.ReturnBookRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.ResponseData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Return a borrowed book
+      tags:
+      - books
+  /books/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a book by ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseData'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.BookResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Get a book by ID
+      tags:
+      - books
+  /books/latest:
+    get:
+      consumes:
+      - application/json
+      description: Get a list of latest books
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entity.BookResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: List latest books
+      tags:
+      - books
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token
+      parameters:
+      - description: Login credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UserLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseData'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.LoginResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      summary: User login
+      tags:
+      - auth
+  /management/books:
+    post:
+      consumes:
+      - application/json
+      description: Create a new book
+      parameters:
+      - description: Create book
+        in: body
+        name: book
+        required: true
+        schema:
+          $ref: '#/definitions/entity.BookCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/entity.ResponseData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Create a new book
+      tags:
+      - management books
+  /management/books/{id}:
+    put:
+      consumes:
+      - application/json
+      description: Update a book by ID
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update book
+        in: body
+        name: update
+        required: true
+        schema:
+          $ref: '#/definitions/entity.BookUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.ResponseData'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Update a book
+      tags:
+      - management books
+  /management/books/{id}/history:
+    get:
+      consumes:
+      - application/json
+      description: Get the borrow history for book
+      parameters:
+      - description: Book ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseData'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/entity.BorrowHistoryResponse'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Get borrow history for a book
+      tags:
+      - management books
+  /management/users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/entity.ResponseData'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Delete a user
+      tags:
+      - management users
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with the input payload
+      parameters:
+      - description: Create user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UserCreateRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseData'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.UserResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      summary: Create a new user
+      tags:
+      - users
+  /users/info:
+    get:
+      consumes:
+      - application/json
+      description: Get a user by ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseData'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.UserResponse'
+              type: object
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Get a user by ID
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update a user with the input payload
+      parameters:
+      - description: Update user
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/entity.UserUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/entity.ResponseData'
+            - properties:
+                data:
+                  $ref: '#/definitions/entity.UserResponse'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/entity.ResponseError'
+      security:
+      - BearerAuth: []
+      summary: Update a user
+      tags:
+      - users
+securityDefinitions:
+  BearerAuth:
+    description: Type "Bearer" followed by a space and JWT token.
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
