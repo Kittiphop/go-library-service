@@ -6,8 +6,7 @@ WORKDIR /app
 RUN apk add --no-cache git \
     && go install github.com/air-verse/air@v1.61.0
 
-# Copy go mod files
-COPY go.mod go.sum ./
+COPY . ./
 
 # Download dependencies
 RUN go mod download
@@ -20,9 +19,6 @@ RUN mkdir -p /tmp
 
 # Set working directory to /app
 WORKDIR /app
-
-# Copy .env file if it exists (using .dockerignore to handle non-existence)
-COPY .env* ./
 
 # Expose the port the app runs on
 EXPOSE 8080

@@ -1,11 +1,14 @@
 package main
 
 import (
+	"go-library-service/cmd/api/constant"
 	"go-library-service/cmd/api/docs"
+	"go-library-service/cmd/api/entity"
 	"go-library-service/cmd/api/handler"
 	"go-library-service/cmd/api/repository"
 	"go-library-service/cmd/api/service"
 	"go-library-service/internal/utils"
+	"os"
 
 	"github.com/fvbock/endless"
 	"github.com/gin-gonic/gin"
@@ -18,34 +21,40 @@ import (
 
 func initPostgresRepository() *repository.PostgresRepository {
 	config := repository.PostgresConfig{
-		Host:     "host.docker.internal",
-		Port:     "5432",
-		User:     "postgres",
-		Password: "postgres",
-		DBName:   "library",
-		// Host:     os.Getenv("PG_HOST"),
-		// Port:     os.Getenv("PG_PORT"),
-		// User:     os.Getenv("PG_USER"),
-		// Password: os.Getenv("PG_PASSWORD"),
-		// DBName:   os.Getenv("PG_NAME"),
+		Host:     requiredEnv("PG_HOST"),
+		Port:     requiredEnv("PG_PORT"),
+		User:     requiredEnv("PG_USER"),
+		Password: requiredEnv("PG_PASSWORD"),
+		DBName:   requiredEnv("PG_NAME"),
 	}
 	r, err :=  repository.NewPostgresRepository(config)
-	
-
 	if err != nil {
 		log.Error("Failed to connect to database: ", err)
 		panic(err)
 	}
 
+	// Generate staff id for test
+	// username: staff and password: staff
+	staffUser := entity.User{
+		Name: "Staff",
+		Username: "staff",
+		Password: "$2a$10$.GRLpoToY1ZdUxfjy85Av.r.VJcnwKK9pvH/VxZNQpYIhmoRLil/C",
+		Role: constant.UserTypeStaff,
+	}
+
+	_, err = r.CreateUser(staffUser)
+	if err != nil {
+		log.Warn("Failed to create staff or existed staff: ", err)
+	}
 
 	return r
 }
 
 func initRedisRepository() *repository.RedisRepository {
 	config := repository.RedisConfig{
-		Host:     "host.docker.internal",
-		Port:     "6379",
-		Password: "",
+		Host:     requiredEnv("REDIS_HOST"),
+		Port:     requiredEnv("REDIS_PORT"),
+		Password: requiredEnv("REDIS_PASSWORD"),
 	}
 	r, err := repository.NewRedisRepository(config)
 
@@ -95,13 +104,23 @@ func initSwagger(g *gin.Engine) {
 	))
 }
 
+func requiredEnv(key string) string {
+	env, ok := os.LookupEnv(key)
+	if !ok {
+		log.Fatalf("required env %s not set", key)
+	}
+	return env
+}
+
 func main() {
 	gin.SetMode(gin.ReleaseMode)
 	g := gin.Default()
 
 	h := initHandler()
 	initSwagger(g)
+
+	port := os.Getenv("APP_PORT")
 	
 	handler.InitRoute(g.Group("/api"), h)
-	endless.ListenAndServe(":8080", g)
+	endless.ListenAndServe(":"+port, g)
 }
