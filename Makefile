@@ -1,6 +1,5 @@
 dev.up:
 	@echo "Starting local environment..."
-	cp .env.example .env
 	docker compose up --remove-orphans
 
 dev.down:

@@ -33,7 +33,7 @@ func initPostgresRepository() *repository.PostgresRepository {
 		panic(err)
 	}
 
-	// Generate staff id for test
+	// Note: Generate staff id for testing
 	// username: staff and password: staff
 	staffUser := entity.User{
 		Name: "Staff",
