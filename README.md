@@ -1,6 +1,14 @@
 # Go Library Service
 
-A Go-based library service for managing books, members, and borrow.
+A Go library service, designed to handle books, members, and borrowing operations efficiently.
+
+## Technology Stack
+
+- **Gin**: HTTP web framework used for building RESTful APIs.
+- **Gorm**: ORM library for Golang.
+- **PostgreSQL**: Storage for data.
+- **Redis**: In-memory data structure store used for caching data.
+- **Ginkgo**: Testing framework for Go.
 
 ## Prerequisites
 
