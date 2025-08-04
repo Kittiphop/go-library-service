@@ -227,7 +227,7 @@ func (h *Handler) BorrowBook(c *gin.Context) {
 			return
 		}
 		if errors.Is(err, errmap.ErrmapInvalidStock) {
-			c.JSON(http.StatusNotFound, entity.ResponseError{Error: "out of stock", Code: http.StatusConflict})
+			c.JSON(http.StatusConflict, entity.ResponseError{Error: "out of stock", Code: http.StatusConflict})
 			return
 		}
 		log.Error(errors.Wrap(err, "[Handler.BorrowBook]: unable to borrow book"))

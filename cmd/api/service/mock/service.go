@@ -109,10 +109,10 @@ func (mr *MockPostgresRepositoryMockRecorder) GetBookByID(bookID interface{}) *g
 }
 
 // GetBorrowHistoryByBookID mocks base method.
-func (m *MockPostgresRepository) GetBorrowHistoryByBookID(bookID uint) ([]entity.BorrowHistory, error) {
+func (m *MockPostgresRepository) GetBorrowHistoryByBookID(bookID uint) ([]entity.BorrowHistoryResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetBorrowHistoryByBookID", bookID)
-	ret0, _ := ret[0].([]entity.BorrowHistory)
+	ret0, _ := ret[0].([]entity.BorrowHistoryResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -124,10 +124,10 @@ func (mr *MockPostgresRepositoryMockRecorder) GetBorrowHistoryByBookID(bookID in
 }
 
 // GetBorrowHistoryByID mocks base method.
-func (m *MockPostgresRepository) GetBorrowHistoryByID(id uint) (*entity.BorrowHistory, error) {
+func (m *MockPostgresRepository) GetBorrowHistoryByID(id uint) (*entity.BorrowHistoryResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetBorrowHistoryByID", id)
-	ret0, _ := ret[0].(*entity.BorrowHistory)
+	ret0, _ := ret[0].(*entity.BorrowHistoryResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

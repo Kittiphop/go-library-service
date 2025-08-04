@@ -6,6 +6,6 @@ dev.down:
 	@echo "Stopping local environment..."
 	docker compose down --volumes
 
-test.mock:
-	@echo "Generating mock files..."
-	mockgen -source=internal/service/service.go -destination=mocks/mock_service.go -package=mocks
+test:
+	@echo "Run testing..."
+	ginkgo -r -p --randomize-suites --randomize-all --fail-on-pending --trace --race --show-node-events -cover

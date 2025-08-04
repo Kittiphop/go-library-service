@@ -45,8 +45,8 @@ type PostgresRepository interface{
 	// BorrowHistory
 	BorrowBook(history *entity.BorrowHistory) (*entity.BorrowHistory, error)
 	ReturnBook(historyID, BookID uint, returnedAt time.Time) error
-	GetBorrowHistoryByBookID(bookID uint) ([]entity.BorrowHistory, error)
-	GetBorrowHistoryByID(id uint) (*entity.BorrowHistory, error)
+	GetBorrowHistoryByBookID(bookID uint) ([]entity.BorrowHistoryResponse, error)
+	GetBorrowHistoryByID(id uint) (*entity.BorrowHistoryResponse, error)
 }
 
 // RedisRepository is a repository for redis

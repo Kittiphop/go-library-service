@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"testing"
 
 	"go-library-service/cmd/api/entity"
 	"go-library-service/cmd/api/handler"
@@ -335,7 +334,3 @@ var _ = Describe("User Handler", func() {
 	})
 })
 
-func TestHandler(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "Handler Suite")
-}

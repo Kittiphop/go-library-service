@@ -44,7 +44,7 @@ type Service interface {
 	// Borrow
 	BorrowBook(req entity.BorrowBookRequest) (*entity.BorrowHistory, error)
 	ReturnBook(req entity.ReturnBookRequest) error
-	GetBookBorrowHistory(bookID uint) ([]entity.BorrowHistory, error)
+	GetBookBorrowHistory(bookID uint) ([]entity.BorrowHistoryResponse, error)
 }
 
 // NewHandler creates a new handler

@@ -2,7 +2,6 @@ package service_test
 
 import (
 	"encoding/json"
-	"testing"
 
 	"go-library-service/cmd/api/entity"
 	service "go-library-service/cmd/api/service"
@@ -222,8 +221,3 @@ var _ = Describe("Book Service", func() {
 		})
 	})
 })
-
-func TestBookService(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "Book Service Suite")
-}

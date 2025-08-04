@@ -35,4 +35,6 @@ type BorrowHistoryResponse struct {
 	BorrowedAt time.Time  `json:"borrowedAt"`
 	ReturnedAt *time.Time `json:"returnedAt,omitempty"`
 	Status     string     `json:"status"`
+	CreatedAt  *time.Time `json:"createdAt"`
+	UpdatedAt  *time.Time `json:"updatedAt"`
 }

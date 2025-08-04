@@ -93,10 +93,10 @@ func (mr *MockServiceMockRecorder) DeleteUser(userID interface{}) *gomock.Call {
 }
 
 // GetBookBorrowHistory mocks base method.
-func (m *MockService) GetBookBorrowHistory(bookID uint) ([]entity.BorrowHistory, error) {
+func (m *MockService) GetBookBorrowHistory(bookID uint) ([]entity.BorrowHistoryResponse, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetBookBorrowHistory", bookID)
-	ret0, _ := ret[0].([]entity.BorrowHistory)
+	ret0, _ := ret[0].([]entity.BorrowHistoryResponse)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

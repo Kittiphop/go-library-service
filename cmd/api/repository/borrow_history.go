@@ -102,8 +102,8 @@ func (r *PostgresRepository) ReturnBook(historyID, BookID uint, returnedAt time.
 	return nil
 }
 
-func (r *PostgresRepository) GetBorrowHistoryByBookID(bookID uint) ([]entity.BorrowHistory, error) {
-	var history []entity.BorrowHistory
+func (r *PostgresRepository) GetBorrowHistoryByBookID(bookID uint) ([]entity.BorrowHistoryResponse, error) {
+	var history []entity.BorrowHistoryResponse
 	err := r.postgres.Table("borrow_histories").Where("book_id = ?", bookID).Order("created_at DESC").Find(&history).Error
 	if err != nil {
 		log.Error(errors.Wrap(err, "[PostgresRepository.GetBorrowHistoryByBookID]: unable to get borrow history"))
@@ -112,8 +112,8 @@ func (r *PostgresRepository) GetBorrowHistoryByBookID(bookID uint) ([]entity.Bor
 	return history, nil
 }
 
-func (r *PostgresRepository) GetBorrowHistoryByID(id uint) (*entity.BorrowHistory, error) {
-	var history entity.BorrowHistory
+func (r *PostgresRepository) GetBorrowHistoryByID(id uint) (*entity.BorrowHistoryResponse, error) {
+	var history entity.BorrowHistoryResponse
 	err := r.postgres.Table("borrow_histories").First(&history, id).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {

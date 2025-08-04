@@ -1,8 +1,6 @@
 package service_test
 
 import (
-	"testing"
-
 	"go-library-service/cmd/api/entity"
 	"go-library-service/cmd/api/service"
 	"go-library-service/cmd/api/service/mock"
@@ -272,7 +270,4 @@ var _ = Describe("User Service", func() {
 	})
 })
 
-func TestService(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "Service Suite")
-}
+

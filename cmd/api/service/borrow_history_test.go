@@ -1,7 +1,6 @@
 package service_test
 
 import (
-	"testing"
 	"time"
 
 	"go-library-service/cmd/api/constant"
@@ -104,7 +103,7 @@ var _ = Describe("Borrow History Service", func() {
 				BookID:    bookID,
 			}
 
-			history := &entity.BorrowHistory{
+			history := &entity.BorrowHistoryResponse{
 				ID:     historyID,
 				BookID: bookID,
 				Status: constant.BorrowStatusBorrowed,
@@ -139,7 +138,7 @@ var _ = Describe("Borrow History Service", func() {
 			}
 
 			returnedAt := time.Now()
-			history := &entity.BorrowHistory{
+			history := &entity.BorrowHistoryResponse{
 				ID:         historyID,
 				BookID:     bookID,
 				Status:     constant.BorrowStatusReturned,
@@ -156,13 +155,13 @@ var _ = Describe("Borrow History Service", func() {
 	Context("GetBookBorrowHistory", func() {
 		It("should return borrow history for a book", func() {
 			bookID := uint(1)
-			expectedHistories := []entity.BorrowHistory{
+			expectedHistories := []entity.BorrowHistoryResponse{
 				{
 					ID:         1,
 					BookID:     bookID,
 					UserID:     1,
 					Status:     constant.BorrowStatusReturned,
-					BorrowedAt: &time.Time{},
+					BorrowedAt: time.Time{},
 					ReturnedAt: &time.Time{},
 				},
 				{
@@ -170,7 +169,7 @@ var _ = Describe("Borrow History Service", func() {
 					BookID:     bookID,
 					UserID:     2,
 					Status:     constant.BorrowStatusBorrowed,
-					BorrowedAt: &time.Time{},
+					BorrowedAt: time.Time{},
 					ReturnedAt: nil,
 				},
 			}
@@ -184,7 +183,7 @@ var _ = Describe("Borrow History Service", func() {
 
 		It("should return empty history when no records found", func() {
 			bookID := uint(999)
-			postgresMock.EXPECT().GetBorrowHistoryByBookID(bookID).Return([]entity.BorrowHistory{}, nil)
+			postgresMock.EXPECT().GetBorrowHistoryByBookID(bookID).Return([]entity.BorrowHistoryResponse{}, nil)
 
 			histories, err := s.GetBookBorrowHistory(bookID)
 			Expect(err).To(BeNil())
@@ -192,8 +191,3 @@ var _ = Describe("Borrow History Service", func() {
 		})
 	})
 })
-
-func TestBorrowHistoryService(t *testing.T) {
-	RegisterFailHandler(Fail)
-	RunSpecs(t, "Borrow History Service Suite")
-}

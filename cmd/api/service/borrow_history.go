@@ -70,7 +70,7 @@ func (s *Service) ReturnBook(req entity.ReturnBookRequest) error {
 	return nil
 }
 
-func (s *Service) GetBookBorrowHistory(bookID uint) ([]entity.BorrowHistory, error) {
+func (s *Service) GetBookBorrowHistory(bookID uint) ([]entity.BorrowHistoryResponse, error) {
 	histories, err := s.deps.PostgresRepo.GetBorrowHistoryByBookID(bookID)
 	if err != nil {
 		return nil, errors.Wrap(err, "[Service.GetBookBorrowHistory]: unable to get book borrow history")
