@@ -21,11 +21,11 @@ import (
 
 func initPostgresRepository() *repository.PostgresRepository {
 	config := repository.PostgresConfig{
-		Host:     requiredEnv("PG_HOST"),
-		Port:     requiredEnv("PG_PORT"),
-		User:     requiredEnv("PG_USER"),
-		Password: requiredEnv("PG_PASSWORD"),
-		DBName:   requiredEnv("PG_NAME"),
+		Host:     utils.RequiredEnv("PG_HOST"),
+		Port:     utils.RequiredEnv("PG_PORT"),
+		User:     utils.RequiredEnv("PG_USER"),
+		Password: utils.RequiredEnv("PG_PASSWORD"),
+		DBName:   utils.RequiredEnv("PG_NAME"),
 	}
 	r, err :=  repository.NewPostgresRepository(config)
 	if err != nil {
@@ -52,9 +52,9 @@ func initPostgresRepository() *repository.PostgresRepository {
 
 func initRedisRepository() *repository.RedisRepository {
 	config := repository.RedisConfig{
-		Host:     requiredEnv("REDIS_HOST"),
-		Port:     requiredEnv("REDIS_PORT"),
-		Password: requiredEnv("REDIS_PASSWORD"),
+		Host:     utils.RequiredEnv("REDIS_HOST"),
+		Port:     utils.RequiredEnv("REDIS_PORT"),
+		Password: utils.RequiredEnv("REDIS_PASSWORD"),
 	}
 	r, err := repository.NewRedisRepository(config)
 
@@ -104,13 +104,6 @@ func initSwagger(g *gin.Engine) {
 	))
 }
 
-func requiredEnv(key string) string {
-	env, ok := os.LookupEnv(key)
-	if !ok {
-		log.Fatalf("required env %s not set", key)
-	}
-	return env
-}
 
 func main() {
 	gin.SetMode(gin.ReleaseMode)

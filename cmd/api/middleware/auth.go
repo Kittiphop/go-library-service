@@ -3,6 +3,7 @@ package middleware
 import (
 	"fmt"
 	"go-library-service/cmd/api/entity"
+	"go-library-service/internal/utils"
 	"net/http"
 	"strings"
 	"time"
@@ -16,8 +17,7 @@ type Claims struct {
 	jwt.RegisteredClaims
 }
 
-// var jwtKey = []byte(os.Getenv("JWT_SECRET"))
-var jwtKey = []byte("SECRET")
+var jwtKey = []byte(utils.RequiredEnv("JWT_SECRET"))
 
 // AuthMiddleware verifies the JWT token and sets the user ID in the context
 func AuthMiddleware() gin.HandlerFunc {
